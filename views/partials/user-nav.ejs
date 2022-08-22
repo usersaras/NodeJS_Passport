@@ -3,9 +3,10 @@
             <div class="d-flex align-items-center gap-5 justify-content-between">
                 <h3 class="text-white">Passport with NodeJS</h3>
                 <div class="d-flex align-items-center gap-4">
+                    <% if(typeof user == 'undefined') {%>
                     <a class="text-decoration-none text-white" href="/users/login">Login</a>
-    
                     <a class="text-decoration-none text-white" href="/users/register">Register</a>
+                    <% } %> 
                 </div>
             </div>
         </div>

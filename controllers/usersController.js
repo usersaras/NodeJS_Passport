@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const usersModel = require('../models/usersModel')
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+
 
 const get_register = (req, res) => {
     res.render("register")
@@ -56,7 +58,7 @@ const post_register = (req, res) => {
 
                                 if (data) {
                                     req.flash('success_msg', 'Registered User!');
-                                    res.redirect('/users/login')
+                                    res.render('login')
                                 }
                             });
                         });
@@ -72,8 +74,38 @@ const post_register = (req, res) => {
     }
 }
 
+const post_login = (req,res, next) => {
+    passport.authenticate('local', {
+        successRedirect: './dashboard',
+        failureRedirect: './login',
+        failureFlash: true
+    })(req,res,next)
+}
+
+const get_dashboard = (req,res) => {
+    console.log(req.user);
+    res.render('dashboard', {
+        user: req.user
+    });
+}
+
+const get_logout = (req,res) => {
+    req.logout((err)=>{
+        if(err){
+            res.send(err)
+        }
+
+        req.flash('success_msg', "You've logged out");
+        res.redirect('/users/login');
+    });
+    
+}
+
 module.exports = {
     get_register,
     get_login,
-    post_register
+    post_register,
+    post_login,
+    get_dashboard,
+    get_logout
 }

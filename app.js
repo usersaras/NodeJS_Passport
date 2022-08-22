@@ -3,6 +3,7 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
 
 
 const IndexRouter = require('./routes/indexRoute')
@@ -11,6 +12,9 @@ const UsersRouter = require('./routes/usersRoute')
 const Users = require('./models/usersModel');
 
 const app = express();
+
+//Passport Config
+require('./config/passport')(passport);
 
 const dbURL = 'mongodb+srv://nodenetninja:nodenetninja@netninjablog.rfjoy.mongodb.net/learn-passport?retryWrites=true&w=majority'
 
@@ -45,6 +49,9 @@ app.use(session({
     saveUninitialized: true,
   }))
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 //connect flash
 app.use(flash());
 
@@ -52,10 +59,11 @@ app.use(flash());
 app.use((req,res,next)=>{
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 })
 
-const PORT = process.env.PORT || 3333;
+const PORT = process.env.PORT || 5050;
 
 app.use('/', IndexRouter);
 app.use('/users', UsersRouter);
